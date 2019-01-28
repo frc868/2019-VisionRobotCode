@@ -8,11 +8,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.Robot;
 
 public class FollowVision extends Command {
   public int target = 100;
-  public double k = 1;
+  public double k = 1; // TODO: tune this
 
   public FollowVision() {
     requires(Robot.drivetrain);
@@ -30,6 +33,8 @@ public class FollowVision extends Command {
     Robot.camera.update();
     int distance = Robot.camera.getDistance() - target;
     double power = ((double) distance) * k;
+    SmartDashboard.putNumber("Distance", distance);
+    SmartDashboard.putNumber("DistanceP", power);
     Robot.drivetrain.set(power, power);
   }
 

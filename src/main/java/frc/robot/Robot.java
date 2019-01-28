@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FollowVision;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -26,14 +26,12 @@ import frc.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
-  public static Drivetrain drivetrain = new Drivetrain();
-  public static Camera camera = new Camera();
+  public static Drivetrain drivetrain;
+  public static Camera camera;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-  SerialPort cam;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -42,11 +40,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
-    cam = new SerialPort(115200, SerialPort.Port.kUSB1); // don't know why it's USB port 1 but ok
+    drivetrain = new Drivetrain();
+    camera = new Camera();
   }
 
   /**
@@ -59,6 +57,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    camera.update(); // update the sensed values from jevois
   }
 
   /**
@@ -121,13 +120,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    System.out.println("test");
-
-    try {
-      System.out.println(cam.readString());
-    } catch (Exception e) {
-      System.out.println("no string retrieved");
-    }
+    JoystickButton btn = new JoystickButton(new XboxController(0), 4);
+    btn.whenPressed(new FollowVision());
   }
 
   /**
