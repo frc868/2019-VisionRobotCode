@@ -7,13 +7,14 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
  */
-public class Camera extends Subsystem {
+public class Camera extends SubsystemManagerChild {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -24,15 +25,33 @@ public class Camera extends Subsystem {
   int position;
   int height_difference;
 
-  public Camera () {
+  public Camera() {
+    super();
     camera = new SerialPort(115200, SerialPort.Port.kUSB1);
   }
 
+  @Override
+  public void init() {
+    CameraServer.getInstance().startAutomaticCapture();
+  }
+
+  @Override
   public void update() {
-    raw = camera.readString();
+    try {
+      raw = camera.readString();
+    } catch (Exception e) {
+      raw = ",,";
+    }
+
     distance = Integer.parseInt(raw.split(",")[0]);
     position = Integer.parseInt(raw.split(",")[1]);
     height_difference = Integer.parseInt(raw.split(",")[2]);
+    
+  }
+
+  @Override
+  public void updateSD() {
+    SmartDashboard.putString("Raw Camera Data", getRawData());
   }
 
   public String getRawData() {
@@ -56,4 +75,5 @@ public class Camera extends Subsystem {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
+
 }

@@ -27,7 +27,6 @@ public class FollowVision extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.camera.update();
     int distance = Robot.camera.getDistance() - target;
     double power = ((double) distance) * k;
     Robot.drivetrain.set(power, power);
