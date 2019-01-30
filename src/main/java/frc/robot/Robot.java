@@ -26,12 +26,11 @@ import frc.robot.subsystems.SubsystemManager;
  */
 public class Robot extends TimedRobot {
   public static OI m_oi;
-  public static Drivetrain drivetrain = new Drivetrain();
-  public static Camera camera = new Camera();
+  public static Drivetrain drivetrain;
+  public static Camera camera;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-  SerialPort cam;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -40,7 +39,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    cam = new SerialPort(115200, SerialPort.Port.kUSB1); // don't know why it's USB port 1 but ok
+    camera = new Camera();
+    drivetrain = new Drivetrain();
 
     SubsystemManager.init();
     SubsystemManager.initSD();
