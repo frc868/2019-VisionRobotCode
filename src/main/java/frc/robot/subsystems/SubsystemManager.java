@@ -28,7 +28,7 @@ public abstract class SubsystemManager {
 
   public static void initSD() {
     for (SubsystemManagerChild sys : subsystems) {
-      sys.init();
+      sys.initSD();
     }
   }
 
