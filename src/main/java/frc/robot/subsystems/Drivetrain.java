@@ -9,12 +9,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Helper;
 /**
  * Add your docs here.
  */
-public class Drivetrain extends Subsystem {
+public class Drivetrain extends SubsystemManagerChild {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -22,15 +22,18 @@ public class Drivetrain extends Subsystem {
 
   public Drivetrain () {
     left = new WPI_TalonSRX(25);
-    right = new WPI_TalonSRX(15);
+    right = new WPI_TalonSRX(11);
+
+    left.setInverted(true);
+    right.setInverted(false);
   }
 
   public void setLeft(double power) {
-    left.set(power);
+    left.set(Helper.bound(power, -0.5, 0.5));
   }
 
   public void setRight(double power) {
-    right.set(power);
+    right.set(Helper.bound(power, -0.5, 0.5));
   }
 
   public void set(double left, double right) {
@@ -38,9 +41,21 @@ public class Drivetrain extends Subsystem {
     setRight(right);
   }
 
+  public void stop() {
+    set(0,0);
+  }
+
+  public double getLeft() {
+    return left.get();
+  }
+
+  public double getRight() {
+    return right.get();
+  }
+
   @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+  public void updateSD() {
+    SmartDashboard.putNumber("Left Power", getLeft());
+    SmartDashboard.putNumber("Right Power", getRight());
   }
 }

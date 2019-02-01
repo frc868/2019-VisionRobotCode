@@ -7,27 +7,27 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * Add your docs here.
- */
 public class Camera extends SubsystemManagerChild {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+  private SerialPort camera;
+  private String raw;
+  private double distance, position, height_difference;
+  // private final int BUFFER_SIZE = 2;
 
-  SerialPort camera;
-  
-  String raw;
-  int distance;
-  int position;
-  int height_difference;
+  // private ArrayList<Double> distanceBuffer, positionBuffer, height_differenceBuffer;
 
   public Camera() {
     super();
     camera = new SerialPort(115200, SerialPort.Port.kUSB1);
+
+    // distanceBuffer = new ArrayList<Double>();
+    // positionBuffer = new ArrayList<Double>();
+    // distanceBuffer = new ArrayList<Double>();
   }
 
   @Override
@@ -38,42 +38,76 @@ public class Camera extends SubsystemManagerChild {
   @Override
   public void update() {
     try {
-      raw = camera.readString();
-    } catch (Exception e) {
-      raw = ",,";
-    }
+      String newData = camera.readString();
+      if (newData != null && !newData.equals("")) {  
+        raw = newData;      
+        if (hasTarget()) {
+          String[] dataArray = raw.split(",");
 
-    distance = Integer.parseInt(raw.split(",")[0]);
-    position = Integer.parseInt(raw.split(",")[1]);
-    height_difference = Integer.parseInt(raw.split(",")[2]);
-    
+          distance = Double.parseDouble(dataArray[0]);
+          position = Double.parseDouble(dataArray[1]);
+          height_difference = Double.parseDouble(dataArray[2]);
+            
+          // distanceBuffer.add(distance);
+          // positionBuffer.add(position);
+          // height_differenceBuffer.add(height_difference);
+
+          // while (distanceBuffer.size() > BUFFER_SIZE) {
+          //   distanceBuffer.remove(0);
+          //   positionBuffer.remove(0);
+          //   height_differenceBuffer.remove(0);
+          // }
+
+          // double distanceSum = 0;
+          // double positionSum = 0;
+          // double height_differenceSum = 0;
+
+          // for (int i = 0; i < distanceBuffer.size(); i++) {
+          //   distanceSum += distanceBuffer.get(i);
+          //   positionSum += positionBuffer.get(i);
+          //   height_differenceSum += height_differenceBuffer.get(i);
+          // }
+
+          // this.distance = distanceSum/distanceBuffer.size();
+          // this.position = positionSum/positionBuffer.size();
+          // this.height_difference = height_differenceSum/height_differenceBuffer.size();
+
+        } else {
+          // distanceBuffer.clear();
+          // positionBuffer.clear();
+          // height_differenceBuffer.clear();
+        }
+      }
+    } catch (Exception e) {}
   }
 
   @Override
   public void updateSD() {
-    SmartDashboard.putString("Raw Camera Data", getRawData());
+    SmartDashboard.putBoolean("Has Target", hasTarget());
+    SmartDashboard.putString("Raw Data", getRawData());
+    SmartDashboard.putNumber("Distance", getDistance());
+    SmartDashboard.putNumber("Position", getPosition());
+    SmartDashboard.putNumber("Height Difference", getHeightDifference());
+  }
+
+  public boolean hasTarget() {
+    return !getRawData().contains(",,");
   }
 
   public String getRawData() {
     return raw;
   }
 
-  public int getDistance() {
+  public double getDistance() {
     return distance;
   }
 
-  public int getPosition() {
-    return position;
+  public double getPosition() {
+    return position - 320;
   }
 
-  public int getHeightDifference() {
+  public double getHeightDifference() {
     return height_difference;
-  }
-
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
   }
 
 }

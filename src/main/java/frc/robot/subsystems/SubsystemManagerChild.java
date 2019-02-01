@@ -8,6 +8,11 @@ public abstract class SubsystemManagerChild extends Subsystem {
       SubsystemManager.subsystems.add(this);
     }
 
+    @Override
+    public void initDefaultCommand() {
+
+    }
+
     public void init() {
 
     }
