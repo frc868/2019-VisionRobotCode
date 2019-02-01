@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Camera extends SubsystemManagerChild {
-  private SerialPort camera;
+  private SerialPort port;
   private String raw;
   private double distance, position, height_difference;
   // private final int BUFFER_SIZE = 2;
@@ -23,7 +23,7 @@ public class Camera extends SubsystemManagerChild {
 
   public Camera() {
     super();
-    camera = new SerialPort(115200, SerialPort.Port.kUSB1);
+    port = new SerialPort(115200, SerialPort.Port.kUSB1);
 
     // distanceBuffer = new ArrayList<Double>();
     // positionBuffer = new ArrayList<Double>();
@@ -38,7 +38,7 @@ public class Camera extends SubsystemManagerChild {
   @Override
   public void update() {
     try {
-      String newData = camera.readString();
+      String newData = port.readString();
       if (newData != null && !newData.equals("")) {  
         raw = newData;      
         if (hasTarget()) {
@@ -110,4 +110,15 @@ public class Camera extends SubsystemManagerChild {
     return height_difference;
   }
 
+  public void sendData(String data) {
+    port.writeString(data);
+  }
+
+  public void switchToVision() {
+    sendData("setmapping MJPG 320 240 10 YUYV 640 480 30 TechHOUNDS DeepSpace");
+  }
+
+  public void switchToCamera() {
+    sendData("setmapping MJPG 320 240 10 YUYV 320 240 10 TechHOUNDS868 Trash2019");
+  }
 }
