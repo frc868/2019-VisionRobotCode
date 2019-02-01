@@ -15,6 +15,7 @@ public class FollowVision extends Command {
   public int target = 420;
   public double k1 = .003; // TODO: tune this
   public double k2 = .002; // TODO: tune this
+  public double k3 = .002; // TODO: tune this
 
   public FollowVision() {
     requires(Robot.drivetrain);
@@ -32,13 +33,17 @@ public class FollowVision extends Command {
     if (!Robot.camera.hasTarget()) {
       Robot.drivetrain.stop();
     } else {
-      double error = Robot.camera.getDistance() - target;
-      double power = error * k1;
-      double angle = Robot.camera.getPosition();
-      double offset = angle * k2;
+      double distanceError = Robot.camera.getDistance() - target;
+      double distanceValue = distanceError * k1;
 
-      double left = power - offset;
-      double right = power + offset;
+      double angleError = Robot.camera.getPosition();
+      double angleValue = angleError * k2;
+
+      double heightDifferenceError = Robot.camera.getHeightDifference();
+      double heightDifferenceValue = heightDifferenceError * k3;
+
+      double left = distanceValue - angleValue + heightDifferenceValue;
+      double right = distanceValue + angleValue - heightDifferenceValue;
 
       left = Helper.deadzone(left, -.15, .1);
       right = Helper.deadzone(right, -.15, .1);

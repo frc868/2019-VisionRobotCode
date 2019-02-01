@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Camera extends SubsystemManagerChild {
   private SerialPort port;
   private String raw;
-  private double distance, position, height_difference;
+  private double distance, position, heightDifference;
   // private final int BUFFER_SIZE = 2;
 
   // private ArrayList<Double> distanceBuffer, positionBuffer, height_differenceBuffer;
@@ -46,7 +46,7 @@ public class Camera extends SubsystemManagerChild {
 
           distance = Double.parseDouble(dataArray[0]);
           position = Double.parseDouble(dataArray[1]);
-          height_difference = Double.parseDouble(dataArray[2]);
+          heightDifference = Double.parseDouble(dataArray[2]);
             
           // distanceBuffer.add(distance);
           // positionBuffer.add(position);
@@ -103,11 +103,11 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public double getPosition() {
-    return position - 320;
+    return position;
   }
 
   public double getHeightDifference() {
-    return height_difference;
+    return heightDifference;
   }
 
   public void sendData(String data) {
