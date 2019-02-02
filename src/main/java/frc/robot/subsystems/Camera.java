@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.SwitchToCamera;
+import frc.robot.commands.SwitchToVision;
 
 public class Camera extends SubsystemManagerChild {
   private SerialPort port;
@@ -81,6 +83,12 @@ public class Camera extends SubsystemManagerChild {
     } catch (Exception e) {}
   }
 
+  // @Override 
+  // public void initSD() {
+  //   SmartDashboard.putData("Switch to Camera", new SwitchToCamera());
+  //   SmartDashboard.putData("Switch to Vision", new SwitchToVision());
+  // }
+
   @Override
   public void updateSD() {
     SmartDashboard.putBoolean("Has Target", hasTarget());
@@ -95,7 +103,7 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public String getRawData() {
-    return raw;
+    return raw != null ? raw : ",,";
   }
 
   public double getDistance() {
@@ -103,7 +111,7 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public double getPosition() {
-    return position;
+    return position - 320;
   }
 
   public double getHeightDifference() {
@@ -115,10 +123,11 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public void switchToVision() {
-    sendData("setmapping MJPG 320 240 10 YUYV 640 480 30 TechHOUNDS DeepSpace");
+    SmartDashboard.putString("testing", "switching");
+    sendData("setmapping2 MJPG 320 240 10 TechHOUNDS DeepSpace");
   }
 
   public void switchToCamera() {
-    sendData("setmapping MJPG 320 240 10 YUYV 320 240 10 TechHOUNDS868 Trash2019");
+    sendData("setmapping2 MJPG 320 240 10 TechHOUNDS868 Trash2019");
   }
 }
