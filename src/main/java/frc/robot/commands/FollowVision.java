@@ -7,19 +7,54 @@
 
 package frc.robot.commands;
 
+import java.util.concurrent.Callable;
+
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Helper;
 import frc.robot.Robot;
+import frc.robot.PIDHelper;
 
 public class FollowVision extends Command {
   public int target = 420;
-  public double k1 = .003; // TODO: tune this
-  public double k2 = .002; // TODO: tune this
-  public double k3 = .002; // TODO: tune this
+  // public double k1 = .003; // TODO: tune this
+  // public double k2 = .002; // TODO: tune this
+  // public double k3 = .002; // TODO: tune this
+
+  public PIDController distController, posController, hDiffController;
+  public PIDHelper.PIDHelperSource 
+    distSource = new PIDHelper.PIDHelperSource(new Callable<Double>(){
+      @Override
+      public Double call() throws Exception {
+        return Robot.camera.getDistance() - target;
+      }
+    }),
+    posSource = new PIDHelper.PIDHelperSource(new Callable<Double>(){
+      @Override
+      public Double call() throws Exception {
+        return Robot.camera.getPosition();
+      }
+    }),
+    hDiffSource = new PIDHelper.PIDHelperSource(new Callable<Double>(){
+      @Override
+      public Double call() throws Exception {
+        return Robot.camera.getHeightDifference();
+      }
+    });
+
+  public PIDHelper.PIDHelperOutput 
+    distOutput = new PIDHelper.PIDHelperOutput(), 
+    posOutput = new PIDHelper.PIDHelperOutput(), 
+    hDiffOutput = new PIDHelper.PIDHelperOutput();
+
 
   public FollowVision() {
     requires(Robot.drivetrain);
     requires(Robot.camera);
+
+    distController = new PIDController(.003, 0, 0, distSource, distController);
+    posController = new PIDController(.002, 0, 0, posSource, posOutput);
+    hDiffController = new PIDController(.002, 0, 0, hDiffSource, hDiffOutput);
   }
 
   // Called just before this Command runs the first time
@@ -33,20 +68,24 @@ public class FollowVision extends Command {
     if (!Robot.camera.hasTarget()) {
       Robot.drivetrain.stop();
     } else {
-      double distanceError = Robot.camera.getDistance() - target;
-      double distanceValue = distanceError * k1;
+      // double distError = Robot.camera.getDistance() - target;
+      // double distValue = distError * k1;
 
-      double angleError = Robot.camera.getPosition();
-      double angleValue = angleError * k2;
+      // double posError = Robot.camera.getPosition();
+      // double posValue = posError * k2;
 
-      double heightDifferenceError = Robot.camera.getHeightDifference();
-      double heightDifferenceValue = heightDifferenceError * k3;
+      // double hDiffError = Robot.camera.getHeightDifference();
+      // double hDiffValue = hDiffError * k3;
 
-      double left = distanceValue - angleValue + heightDifferenceValue;
-      double right = distanceValue + angleValue - heightDifferenceValue;
+      double distValue = distOutput.getOutput();
+      double posValue = distOutput.getOutput();
+      double hDiffValue = distOutput.getOutput();
 
-      left = Helper.deadzone(left, -.15, .1);
-      right = Helper.deadzone(right, -.15, .1);
+      double left = distValue - posValue + hDiffValue;
+      double right = distValue + posValue - hDiffValue;
+
+      // left = Helper.deadzone(left, -.1, .1);
+      // right = Helper.deadzone(right, -.1, .1);
       Robot.drivetrain.set(left, right);
     }
   }
