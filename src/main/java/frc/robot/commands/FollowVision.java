@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Helper;
 import frc.robot.Robot;
 import frc.robot.PIDHelper;
+import frc.robot.commands.SwitchToVision;
 
 public class FollowVision extends Command {
   public int target = 450;
@@ -62,6 +63,8 @@ public class FollowVision extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    // running this in non-vision mode will cause bad things to happen
+    new SwitchToVision();
   }
 
   // Called repeatedly when this Command is scheduled to run

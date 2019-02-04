@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SwitchToCamera;
@@ -17,14 +18,21 @@ import frc.robot.commands.SwitchToVision;
 
 public class Camera extends SubsystemManagerChild {
   private SerialPort port;
-  private String raw;
-  private double distance, position, heightDifference;
+  private UsbCamera  jevois;
+  private String     raw;
+  private double     distance, position, heightDifference;
   // private final int BUFFER_SIZE = 2;
+  
+  private final int RES_WIDTH  = 320;
+  private final int RES_HEIGHT = 240;
+  private final int FPS_VISION = 10;
+  private final int FPS_CAMERA = 15;
 
   // private ArrayList<Double> distanceBuffer, positionBuffer, height_differenceBuffer;
 
   public Camera() {
     super();
+    // following assumes that cam is on port 1 *which is robot-specific*
     port = new SerialPort(115200, SerialPort.Port.kUSB1);
 
     // distanceBuffer = new ArrayList<Double>();
@@ -34,7 +42,10 @@ public class Camera extends SubsystemManagerChild {
 
   @Override
   public void init() {
-    CameraServer.getInstance().startAutomaticCapture();
+    // change the param of startAutomaticCapture to whatever cam you're using
+     jevois = CameraServer.getInstance().startAutomaticCapture(); // returns a UsbCamera
+     jevois.setResolution(RES_WIDTH, RES_HEIGHT);
+     this.switchToVision();
   }
 
   @Override
@@ -83,11 +94,11 @@ public class Camera extends SubsystemManagerChild {
     } catch (Exception e) {}
   }
 
-  // @Override 
-  // public void initSD() {
-  //   SmartDashboard.putData("Switch to Camera", new SwitchToCamera());
-  //   SmartDashboard.putData("Switch to Vision", new SwitchToVision());
-  // }
+  @Override 
+  public void initSD() {
+    SmartDashboard.putData("Switch to Camera", new SwitchToCamera());
+    SmartDashboard.putData("Switch to Vision", new SwitchToVision());
+  }
 
   @Override
   public void updateSD() {
@@ -123,11 +134,13 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public void switchToVision() {
-    SmartDashboard.putString("testing", "switching");
-    sendData("setmapping2 MJPG 320 240 10 TechHOUNDS DeepSpace");
+    /* SmartDashboard.putString("testing", "switching");
+    sendData("setmapping2 MJPG 320 240 10 TechHOUNDS DeepSpace"); */
+    jevois.setFPS(FPS_VISION);
   }
 
   public void switchToCamera() {
-    sendData("setmapping2 MJPG 320 240 10 TechHOUNDS868 Trash2019");
+    // sendData("setmapping2 MJPG 320 240 10 TechHOUNDS868 Trash2019");
+    jevois.setFPS(FPS_CAMERA);
   }
 }
