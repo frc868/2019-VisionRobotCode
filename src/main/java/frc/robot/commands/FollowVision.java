@@ -18,7 +18,8 @@ import frc.robot.PIDHelper;
 
 public class FollowVision extends Command {
   public int target = 450;
-  public double k1 = .003; // TODO: tune this
+  public double k1 = -.003; // this is negative as a larger value means we are closer to the target 
+  // TODO: tune this ^
   public double k2 = .002; // TODO: tune this
   public double k3 = .002; // TODO: tune this
 
@@ -86,8 +87,8 @@ public class FollowVision extends Command {
       // double posValue = distOutput.getOutput();
       // double hDiffValue = distOutput.getOutput();
 
-      double left = - posValue + hDiffValue;
-      double right =  posValue - hDiffValue;
+      double left = distValue + posValue + hDiffValue;
+      double right = distValue - posValue - hDiffValue;
 
       // left = Helper.deadzone(left, -.1, .1);
       // right = Helper.deadzone(right, -.1, .1);
@@ -104,11 +105,13 @@ public class FollowVision extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.drivetrain.stop();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

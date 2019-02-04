@@ -24,8 +24,8 @@ public class Drivetrain extends SubsystemManagerChild {
     left = new WPI_TalonSRX(25);
     right = new WPI_TalonSRX(11);
 
-    left.setInverted(true);
-    right.setInverted(false);
+    left.setInverted(false);
+    right.setInverted(true);
   }
 
   public void setLeft(double power) {
