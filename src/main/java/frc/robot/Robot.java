@@ -27,6 +27,10 @@ public class Robot extends TimedRobot {
 
     SubsystemManager.init();
     SubsystemManager.initSD();
+
+    // SmartDashboard.putNumber("k1", -0.003);
+    // SmartDashboard.putNumber("k2", .002);
+    // SmartDashboard.putNumber("k3", .002);
   }
 
   @Override
@@ -57,7 +61,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
+    drivetrain.set(.5, .5);
   }
 
   @Override

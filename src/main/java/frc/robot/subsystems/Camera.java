@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -20,7 +18,7 @@ public class Camera extends SubsystemManagerChild {
   private SerialPort port;
   private UsbCamera  jevois;
   private String     raw;
-  private double     distance, position, heightDifference;
+  private double     distance, position, heightRatio;
   // private final int BUFFER_SIZE = 2;
   
   private final int RES_WIDTH  = 320;
@@ -59,7 +57,7 @@ public class Camera extends SubsystemManagerChild {
 
           distance = Double.parseDouble(dataArray[0]);
           position = Double.parseDouble(dataArray[1]);
-          heightDifference = Double.parseDouble(dataArray[2]);
+          heightRatio = Double.parseDouble(dataArray[2]);
             
           // distanceBuffer.add(distance);
           // positionBuffer.add(position);
@@ -106,7 +104,7 @@ public class Camera extends SubsystemManagerChild {
     SmartDashboard.putString("Raw Data", getRawData());
     SmartDashboard.putNumber("Distance", getDistance());
     SmartDashboard.putNumber("Position", getPosition());
-    SmartDashboard.putNumber("Height Difference", getHeightDifference());
+    SmartDashboard.putNumber("Height Ratio", getHeightRatio());
   }
 
   public boolean hasTarget() {
@@ -122,11 +120,11 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public double getPosition() {
-    return position - 320;
+    return position - RES_WIDTH/2;
   }
 
-  public double getHeightDifference() {
-    return heightDifference;
+  public double getHeightRatio() {
+    return heightRatio;
   }
 
   public void sendData(String data) {
