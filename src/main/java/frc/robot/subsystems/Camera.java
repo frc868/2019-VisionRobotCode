@@ -134,13 +134,10 @@ public class Camera extends SubsystemManagerChild {
   }
 
   public void switchToVision() {
-    /* SmartDashboard.putString("testing", "switching");
-    sendData("setmapping2 MJPG 320 240 10 TechHOUNDS DeepSpace"); */
     jevois.setFPS(FPS_VISION);
   }
 
   public void switchToCamera() {
-    // sendData("setmapping2 MJPG 320 240 10 TechHOUNDS868 Trash2019");
     jevois.setFPS(FPS_CAMERA);
   }
 }

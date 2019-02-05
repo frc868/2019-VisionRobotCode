@@ -18,11 +18,10 @@ import frc.robot.PIDHelper;
 import frc.robot.commands.SwitchToVision;
 
 public class FollowVision extends Command {
-  public int target = 450;
-  public double k1 = -.003; // this is negative as a larger value means we are closer to the target 
-  // TODO: tune this ^
-  public double k2 = .002; // TODO: tune this
-  public double k3 = .002; // TODO: tune this
+  public int    target  = 450;
+  public double k_dist  = -.02; // this is negative as a larger value means we are closer to the target 
+  public double k_pos   = -.005;
+  public double k_hdiff =  .005;
 
   // public PIDController distController, posController, hDiffController;
   // public PIDHelper.PIDHelperSource 
@@ -74,13 +73,13 @@ public class FollowVision extends Command {
       Robot.drivetrain.stop();
     } else {
       double distError = Robot.camera.getDistance() - target;
-      double distValue = distError * k1;
+      double distValue = distError * k_dist;
 
       double posError = Robot.camera.getPosition();
-      double posValue = posError * k2;
+      double posValue = posError * k_pos;
 
       double hDiffError = Robot.camera.getHeightDifference();
-      double hDiffValue = hDiffError * k3;
+      double hDiffValue = hDiffError * k_hdiff;
 
       SmartDashboard.putNumber("distValue", distValue);
       SmartDashboard.putNumber("posValue", posValue);
