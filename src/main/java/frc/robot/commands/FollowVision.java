@@ -7,23 +7,18 @@
 
 package frc.robot.commands;
 
-import java.util.concurrent.Callable;
-
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Helper;
 import frc.robot.Robot;
-import frc.robot.PIDHelper;
-import frc.robot.commands.SwitchToVision;
 
 public class FollowVision extends Command {
-  public int    target  = 450;
-  public double k_dist  = -.02; // this is negative as a larger value means we are closer to the target 
-  public double k_pos   = -.005;
-  public double k_hdiff =  .005;
+  public int target = 150;
 
-  // public PIDController distController, posController, hDiffController;
+  public double k_dist  = -0.02; // this is negative as a larger value means we are closer to the target 
+  public double k_pos   =  0.004;
+  public double k_hdiff = -.0025;
+
+  // public PIDController distController, posController, hRatioController;
   // public PIDHelper.PIDHelperSource 
   //   distSource = new PIDHelper.PIDHelperSource(new Callable<Double>(){
   //     @Override
@@ -37,33 +32,36 @@ public class FollowVision extends Command {
   //       return Robot.camera.getPosition();
   //     }
   //   }),
-  //   hDiffSource = new PIDHelper.PIDHelperSource(new Callable<Double>(){
+  //   hRatioSource = new PIDHelper.PIDHelperSource(new Callable<Double>(){
   //     @Override
   //     public Double call() throws Exception {
-  //       return Robot.camera.getHeightDifference();
+  //       return Robot.camera.getHeightRatio();
   //     }
   //   });
 
   // public PIDHelper.PIDHelperOutput 
   //   distOutput = new PIDHelper.PIDHelperOutput(), 
   //   posOutput = new PIDHelper.PIDHelperOutput(), 
-  //   hDiffOutput = new PIDHelper.PIDHelperOutput();
+  //   hRatioOutput = new PIDHelper.PIDHelperOutput();
 
 
   public FollowVision() {
     requires(Robot.drivetrain);
     requires(Robot.camera);
 
+   
     // distController = new PIDController(.003, 0, 0, distSource, distController);
     // posController = new PIDController(.002, 0, 0, posSource, posOutput);
-    // hDiffController = new PIDController(.002, 0, 0, hDiffSource, hDiffOutput);
+    // hRatioController = new PIDController(.002, 0, 0, hRatioSource, hRatioOutput);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     // running this in non-vision mode will cause bad things to happen
-    new SwitchToVision();
+    // new SwitchToVision();
+
+    
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -72,25 +70,29 @@ public class FollowVision extends Command {
     if (!Robot.camera.hasTarget()) {
       Robot.drivetrain.stop();
     } else {
+      // k1 = SmartDashboard.getNumber("k1", k1);
+      // k2 = SmartDashboard.getNumber("k2", k2);
+      // k3 = SmartDashboard.getNumber("k3", k3);
+
       double distError = Robot.camera.getDistance() - target;
       double distValue = distError * k_dist;
 
       double posError = Robot.camera.getPosition();
       double posValue = posError * k_pos;
 
-      double hDiffError = Robot.camera.getHeightDifference();
-      double hDiffValue = hDiffError * k_hdiff;
+      double hRatioError = Robot.camera.getHeightRatio();
+      double hRatioValue = hRatioError * k_hdiff;
 
       SmartDashboard.putNumber("distValue", distValue);
       SmartDashboard.putNumber("posValue", posValue);
-      SmartDashboard.putNumber("hDiffValue", hDiffValue);
+      SmartDashboard.putNumber("hRatioValue", hRatioValue);
 
       // double distValue = distOutput.getOutput();
       // double posValue = distOutput.getOutput();
-      // double hDiffValue = distOutput.getOutput();
+      // double hRatioValue = distOutput.getOutput();
 
-      double left = distValue + posValue + hDiffValue;
-      double right = distValue - posValue - hDiffValue;
+      double left = distValue + posValue + hRatioValue;
+      double right = distValue - posValue - hRatioValue;
 
       // left = Helper.deadzone(left, -.1, .1);
       // right = Helper.deadzone(right, -.1, .1);

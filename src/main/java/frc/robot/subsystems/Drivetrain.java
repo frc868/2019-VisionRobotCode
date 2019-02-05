@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,9 @@ public class Drivetrain extends SubsystemManagerChild {
     left = new WPI_TalonSRX(25);
     right = new WPI_TalonSRX(11);
 
+    left.setNeutralMode(NeutralMode.Coast);
+    right.setNeutralMode(NeutralMode.Coast);
+
     left.setInverted(false);
     right.setInverted(true);
   }
@@ -33,7 +37,7 @@ public class Drivetrain extends SubsystemManagerChild {
   }
 
   public void setRight(double power) {
-    right.set(Helper.bound(power, -0.5, 0.5));
+    right.set(Helper.bound(power, -0.5, 0.5)*.80);
   }
 
   public void set(double left, double right) {
