@@ -9,52 +9,41 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Helper;
+import frc.robot.RobotMap;
 /**
  * Add your docs here.
  */
 public class Drivetrain extends SubsystemManagerChild {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-
-  WPI_TalonSRX left, right;
-
-  public Drivetrain () {
-    left = new WPI_TalonSRX(25);
-    right = new WPI_TalonSRX(11);
-
-    left.setNeutralMode(NeutralMode.Brake);
-    right.setNeutralMode(NeutralMode.Brake);
-
-    left.setInverted(false);
-    right.setInverted(true);
+  private Spark leftPrimary, rightPrimary; 
+  
+  public Drivetrain() {
+    leftPrimary = new Spark(RobotMap.DriveTrain.LEFT_P);
+    rightPrimary = new Spark(RobotMap.DriveTrain.RIGHT_P);
   }
-
-  public void setLeft(double power) {
-    left.set(Helper.bound(power, -0.5, 0.5));
+  public void setLeft(double leftP) {
+    leftPrimary.set((leftP > 1 ? 1 : leftP) < -1 ? -1 : leftP);
   }
-
-  public void setRight(double power) {
-    right.set(Helper.bound(power, -0.5, 0.5));
+  public void setRight(double rightP) {
+    rightPrimary.set((rightP > 1 ? 1 : rightP) < -1 ? -1 : rightP);
   }
-
   public void set(double left, double right) {
     setLeft(left);
     setRight(right);
   }
+  public double getLeft() {
+    return leftPrimary.get();
+  }
+  public double getRight() {
+    return rightPrimary.get();
+  }
 
   public void stop() {
-    set(0,0);
-  }
-
-  public double getLeft() {
-    return left.get();
-  }
-
-  public double getRight() {
-    return right.get();
+    this.set(0,0);
   }
 
   @Override
