@@ -19,24 +19,12 @@ public class OI {
     XboxController controller;
     public OI(){
         controller = new XboxController(0);
-    } //TODO spacing
+    }
     public void init(){
- //       Button a = new JoystickButton(controller, 0);
- //       Button b = new JoystickButton(controller, 1);
- //       a.whileHeld(new doIntake(.5));
- //       b.whileHeld(new Shoot(.5));
-    } //TODO spacing
+    }
     public void update(){
         double leftYAxis = controller.getRawAxis(1);
-        //double leftXAxis = controller.getRawAxis(0);
-        //double rightYAxis = controller.getRawAxis(5);
         double rightXAxis = controller.getRawAxis(4);
-        //double leftTrigger = controller.getRawAxis(2);
-        //double rightTrigger = controller.getRawAxis(3);
-        Robot.drivetrain.set((-leftYAxis + rightXAxis), (leftYAxis + rightXAxis));
-
-    //    if(leftTrigger>0 && rightTrigger == 0)Robot.tilt.setPower(-leftTrigger);
-    //    if(rightTrigger>0 && leftTrigger == 0)Robot.tilt.setPower(rightTrigger);
- }
-
+        Robot.drivetrain.set(-(leftYAxis - rightXAxis), (leftYAxis + rightXAxis));
+    }
 }

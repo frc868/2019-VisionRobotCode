@@ -14,9 +14,10 @@ import frc.robot.Robot;
 public class FollowVision extends Command {
   public int target = 200;
 
-  public double k_dist   = -0.02; // this is negative as a larger value means we are closer to the target 
-  public double k_pos    =  0.004;
-  public double k_hratio = -.0025;
+  // HAMMERHEAD
+  public double k_dist   = -0.025; // this is negative as a larger value means we are closer to the target 
+  public double k_pos    =  0.02;
+  public double k_hratio =  0.005;
 
   // public PIDController distController, posController, hRatioController;
   // public PIDHelper.PIDHelperSource 
@@ -96,7 +97,7 @@ public class FollowVision extends Command {
 
       // left = Helper.deadzone(left, -.1, .1);
       // right = Helper.deadzone(right, -.1, .1);
-      Robot.drivetrain.set(left, right);
+      Robot.drivetrain.set(left, -right);
     }
   }
 
