@@ -65,11 +65,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    System.out.println("no.");
+    //System.out.println("no.");
   }
 
   @Override
   public void teleopPeriodic() {
+    m_oi.update();
     Scheduler.getInstance().run();
   }
 
