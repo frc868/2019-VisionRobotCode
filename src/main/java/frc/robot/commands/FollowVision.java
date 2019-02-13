@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 public class FollowVision extends Command {
-  public int target = 200;
+  public int target = 230;
 
   // HAMMERHEAD
-  public double k_dist   = -0.025; // this is negative as a larger value means we are closer to the target 
+  public double k_dist   = -0.03; // this is negative as a larger value means we are closer to the target 
   public double k_pos    =  0.02;
   public double k_hratio =  0.005;
 
@@ -69,9 +69,9 @@ public class FollowVision extends Command {
       //Robot.drivetrain.set(0.2, 0.2);
       Robot.drivetrain.stop();
     } else {
-      k_dist = SmartDashboard.getNumber("k_dist", k_dist);
-      k_pos = SmartDashboard.getNumber("k_pos", k_pos);
-      k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
+      //k_dist = SmartDashboard.getNumber("k_dist", k_dist);
+      //k_pos = SmartDashboard.getNumber("k_pos", k_pos);
+      //k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
 
       double distError = Robot.camera.getDistance() - target;
       double distValue = distError * k_dist;

@@ -32,9 +32,9 @@ public class Robot extends TimedRobot {
     SubsystemManager.init();
     SubsystemManager.initSD();
 
-    SmartDashboard.putNumber("k_dist", -0.025);
-    SmartDashboard.putNumber("k_pos", .02);
-    SmartDashboard.putNumber("k_hratio", .005);
+    //SmartDashboard.putNumber("k_dist", -0.025);
+    //SmartDashboard.putNumber("k_pos", .02);
+    //SmartDashboard.putNumber("k_hratio", .005);
   }
 
   @Override
