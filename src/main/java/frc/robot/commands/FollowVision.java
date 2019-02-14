@@ -16,7 +16,7 @@ public class FollowVision extends Command {
 
   // HAMMERHEAD
   public double k_dist   = -0.03; // this is negative as a larger value means we are closer to the target 
-  public double k_pos    =  0.02;
+  public double k_pos    =  0.015;
   public double k_hratio =  0.005;
 
   // public PIDController distController, posController, hRatioController;
