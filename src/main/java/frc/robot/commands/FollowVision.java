@@ -26,7 +26,7 @@ public class FollowVision extends Command {
 
   @Override
   protected void initialize() {
-    (new SwitchToVision()).start();;
+    //(new SwitchToVision()).start();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class FollowVision extends Command {
     k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
 
     // if one's null they should all be null
-    if (!(Robot.camera.getDistance() == -1)) {
+    if (Robot.camera.hasTarget()) {
       double distError = Robot.camera.getDistance() - target;
       double distValue = distError * k_dist;
 
@@ -61,7 +61,7 @@ public class FollowVision extends Command {
 
   @Override
   protected boolean isFinished() {
-    return (Robot.ultrasonic.getRangeInches() < 5);
+    return (Robot.ultrasonic.getDistance() < 5);
   }
 
   @Override

@@ -21,10 +21,9 @@ import frc.robot.commands.FollowVision;
 public class OI {
   XboxController controller;
   Command fv;
+  
   public OI(){
     controller = new XboxController(0);
-    Button a = new JoystickButton(controller, 1);
-    a.whenPressed(new FollowVision());
   }
   public void init()
   {

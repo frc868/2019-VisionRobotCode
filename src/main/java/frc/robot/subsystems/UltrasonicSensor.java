@@ -18,9 +18,7 @@ public class UltrasonicSensor extends SubsystemManagerChild {
   private Ultrasonic us;
 
   public UltrasonicSensor() {
-    super();
-
-    us = new Ultrasonic(0, 1);
+    us = new Ultrasonic(1, 0);
   }
 
   public double getDistance() {
@@ -29,6 +27,7 @@ public class UltrasonicSensor extends SubsystemManagerChild {
 
   @Override
   public void init() {
+    us.setAutomaticMode(true);
   }
 
   @Override
