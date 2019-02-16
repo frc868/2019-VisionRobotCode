@@ -13,7 +13,7 @@ import frc.robot.Robot;
 
 public class FollowVision extends Command {
   // 200: porta-target, 230-240ish: rocket
-  public int target = 200;
+  public int target = 230;
 
   // HAMMERHEAD
   public static double k_dist   = -0.028; // this is negative as a larger value means we are closer to the target 
@@ -34,13 +34,12 @@ public class FollowVision extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (!Robot.camera.hasTarget()) {
-      Robot.drivetrain.stop();
-    } else {
-      k_dist = SmartDashboard.getNumber("k_dist", k_dist);
-      k_pos = SmartDashboard.getNumber("k_pos", k_pos);
-      k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
+    k_dist = SmartDashboard.getNumber("k_dist", k_dist);
+    k_pos = SmartDashboard.getNumber("k_pos", k_pos);
+    k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
 
+    // if one's null they should all be null
+    if (!(Robot.camera.getDistance() == -1)) {
       double distError = Robot.camera.getDistance() - target;
       double distValue = distError * k_dist;
 
@@ -66,13 +65,13 @@ public class FollowVision extends Command {
       // left = Helper.deadzone(left, -.1, .1);
       // right = Helper.deadzone(right, -.1, .1);
       Robot.drivetrain.set(left, -right);
-    }
+    } 
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return (Robot.ultrasonic.getRangeInches() < 5);
   }
 
   // Called once after isFinished returns true

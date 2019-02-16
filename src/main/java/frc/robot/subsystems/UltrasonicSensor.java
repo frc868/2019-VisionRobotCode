@@ -20,8 +20,7 @@ public class UltrasonicSensor extends SubsystemManagerChild {
   public UltrasonicSensor() {
     super();
 
-    // echo-trigger
-    us = new Ultrasonic(1, 0);
+    us = new Ultrasonic(0, 1);
   }
 
   public double getDistance() {

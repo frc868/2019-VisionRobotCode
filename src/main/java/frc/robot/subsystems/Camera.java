@@ -34,9 +34,9 @@ public class Camera extends SubsystemManagerChild {
   @Override
   public void init() {
     // change the param of startAutomaticCapture to whatever cam you're using
-     jevois = CameraServer.getInstance().startAutomaticCapture(); // returns a UsbCamera
-     jevois.setResolution(RES_WIDTH, RES_HEIGHT);
-     this.switchToVision();
+    jevois = CameraServer.getInstance().startAutomaticCapture(); // returns a UsbCamera
+    jevois.setResolution(RES_WIDTH, RES_HEIGHT);
+    this.switchToVision();
   }
 
   @Override
@@ -51,6 +51,10 @@ public class Camera extends SubsystemManagerChild {
           distance = Double.parseDouble(dataArray[0]);
           position = Double.parseDouble(dataArray[1]);
           heightRatio = Double.parseDouble(dataArray[2]);
+        } else {
+          distance = -1; // "null"
+          position = -1;
+          heightRatio = -1;
         }
       }
     } catch (Exception e) {}
