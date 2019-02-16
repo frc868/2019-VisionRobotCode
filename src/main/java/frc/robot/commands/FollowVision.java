@@ -14,8 +14,9 @@ import frc.robot.Robot;
 public class FollowVision extends Command {
   // 200: porta-target, 230-240ish: rocket
   public int target = 200;
+  private int counts = 0;
+  private final int COUNTS_NEEDED = 5;
 
-  // HAMMERHEAD
   public static double k_dist   = -0.028; // this is negative as a larger value means we are closer to the target 
   public static double k_pos    =  0.012;
   public static double k_hratio =  0.005;
@@ -25,17 +26,15 @@ public class FollowVision extends Command {
     requires(Robot.camera);
   }
 
-  // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    new SwitchToVision();
+    (new SwitchToVision()).start();;
   }
 
-  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     if (!Robot.camera.hasTarget()) {
-      Robot.drivetrain.stop();
+      counts++;
     } else {
       k_dist = SmartDashboard.getNumber("k_dist", k_dist);
       k_pos = SmartDashboard.getNumber("k_pos", k_pos);
@@ -54,35 +53,26 @@ public class FollowVision extends Command {
       SmartDashboard.putNumber("posValue", posValue);
       SmartDashboard.putNumber("hRatioValue", hRatioValue);
 
-      // double distValue = distOutput.getOutput();
-      // double posValue = distOutput.getOutput();
-      // double hRatioValue = distOutput.getOutput();
-
       double left = (distValue + posValue + hRatioValue) / 10.0;
       SmartDashboard.putNumber("lpwr", left);
       double right = (distValue - posValue - hRatioValue) / 10.0;
       SmartDashboard.putNumber("rpwr", right);
 
-      // left = Helper.deadzone(left, -.1, .1);
-      // right = Helper.deadzone(right, -.1, .1);
       Robot.drivetrain.set(left, -right);
+      counts = 0;
     }
   }
 
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return counts > COUNTS_NEEDED;
   }
 
-  // Called once after isFinished returns true
   @Override
   protected void end() {
     Robot.drivetrain.stop();
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
     end();

@@ -13,7 +13,6 @@ import frc.robot.subsystems.SubsystemManager;
 
 
 public class Robot extends TimedRobot {
-  public static OI m_oi;
   public static Drivetrain drivetrain;
   public static Camera camera;
   public static UltrasonicSensor ultrasonic;
@@ -21,10 +20,8 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-
   @Override
   public void robotInit() {
-    m_oi = new OI();
     camera = new Camera();
     drivetrain = new Drivetrain();
     ultrasonic = new UltrasonicSensor();
@@ -44,15 +41,6 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {
-  }
-
-  @Override
-  public void disabledPeriodic() {
-    Scheduler.getInstance().run();
-  }
-
-  @Override
   public void autonomousInit() {
     FollowVision fv = new FollowVision();
     fv.start();
@@ -65,16 +53,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //System.out.println("no.");
+    OI.init();
   }
 
   @Override
   public void teleopPeriodic() {
-    m_oi.update();
+    OI.update();
     Scheduler.getInstance().run();
-  }
-
-  @Override
-  public void testPeriodic() {
   }
 }
