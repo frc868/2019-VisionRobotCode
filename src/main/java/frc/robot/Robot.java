@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.FollowVision;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.subsystems.SubsystemManager;
 
 
@@ -60,7 +59,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    OI.update();
+    m_oi.update();
     Scheduler.getInstance().run();
   }
 }
