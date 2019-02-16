@@ -13,9 +13,7 @@ import frc.robot.Robot;
 
 public class FollowVision extends Command {
   // 200: porta-target, 230-240ish: rocket
-  public int target = 200;
-  private int counts = 0;
-  private final int COUNTS_NEEDED = 5;
+  public int target = 230;
 
   public static double k_dist   = -0.028; // this is negative as a larger value means we are closer to the target 
   public static double k_pos    =  0.012;
@@ -33,13 +31,12 @@ public class FollowVision extends Command {
 
   @Override
   protected void execute() {
-    if (!Robot.camera.hasTarget()) {
-      counts++;
-    } else {
-      k_dist = SmartDashboard.getNumber("k_dist", k_dist);
-      k_pos = SmartDashboard.getNumber("k_pos", k_pos);
-      k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
+    k_dist = SmartDashboard.getNumber("k_dist", k_dist);
+    k_pos = SmartDashboard.getNumber("k_pos", k_pos);
+    k_hratio = SmartDashboard.getNumber("k_hratio", k_hratio);
 
+    // if one's null they should all be null
+    if (!(Robot.camera.getDistance() == -1)) {
       double distError = Robot.camera.getDistance() - target;
       double distValue = distError * k_dist;
 
@@ -59,13 +56,12 @@ public class FollowVision extends Command {
       SmartDashboard.putNumber("rpwr", right);
 
       Robot.drivetrain.set(left, -right);
-      counts = 0;
-    }
+    } 
   }
 
   @Override
   protected boolean isFinished() {
-    return counts > COUNTS_NEEDED;
+    return (Robot.ultrasonic.getRangeInches() < 5);
   }
 
   @Override

@@ -8,8 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.Button;
+import frc.robot.commands.FollowVision;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.command.Command;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -17,19 +19,24 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.FollowVision;
 
 public class OI {
-  public static XboxController controller;
-
-  public static void init(){
+  XboxController controller;
+  Command fv;
+  public OI(){
     controller = new XboxController(0);
     Button a = new JoystickButton(controller, 1);
     a.whenPressed(new FollowVision());
   }
-
-  public static void update(){
-    // if (FollowVision.isRunning()) {
-    //     double leftYAxis = controller.getRawAxis(1);
-    //     double rightXAxis = controller.getRawAxis(4);
-    //     Robot.drivetrain.set(-(leftYAxis - rightXAxis), (leftYAxis + rightXAxis));
-    // }
+  public void init()
+  {
+    fv = new FollowVision();
+    Button bA = new JoystickButton(controller, 1);
+    bA.whileHeld(new FollowVision());
+  }
+  public void update(){
+    if (!fv.isRunning()) {
+      double leftYAxis = controller.getRawAxis(1);
+      double rightXAxis = controller.getRawAxis(4);
+      Robot.drivetrain.set(-(leftYAxis - rightXAxis), (leftYAxis + rightXAxis));
+    }
   }
 }
